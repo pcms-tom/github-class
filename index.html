@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>初一望 · GitHub 課程</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #06080f;
+      --surface:  rgba(255,255,255,0.04);
+      --border:   rgba(255,255,255,0.08);
+      --border-h: rgba(255,255,255,0.18);
+      --text-1:   #f0f4ff;
+      --text-2:   #8a9ac0;
+      --text-3:   #4a5a80;
+      --purple:   #a78bfa;
+      --blue:     #60a5fa;
+      --cyan:     #22d3ee;
+      --green:    #34d399;
+      --amber:    #fbbf24;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans TC', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── Aurora ── */
+    .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .aurora::before, .aurora::after {
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(130px); opacity: 0.13;
+      animation: drift 22s ease-in-out infinite alternate;
+    }
+    .aurora::before {
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, #7c3aed, #4f46e5);
+      top: -250px; left: -250px;
+    }
+    .aurora::after {
+      width: 650px; height: 650px;
+      background: radial-gradient(circle, #0891b2, #059669);
+      bottom: -200px; right: -200px;
+      animation-delay: -11s;
+    }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(70px,45px) scale(1.12); }
+    }
+
+    /* ── Layout ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Header ── */
+    header { text-align: center; padding: 80px 0 56px; }
+
+    .logo-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 18px;
+      font-size: 13px; color: var(--text-2);
+      letter-spacing: 0.05em; margin-bottom: 28px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 900; letter-spacing: -0.035em; line-height: 1.1;
+      background: linear-gradient(135deg, #f0f4ff 0%, var(--purple) 40%, var(--cyan) 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      color: var(--text-2); font-weight: 300;
+      max-width: 500px; margin: 0 auto;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-2); margin-bottom: 16px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Method cards grid ── */
+    .methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px; margin-bottom: 56px;
+    }
+
+    .method-card {
+      position: relative; display: flex; flex-direction: column; gap: 14px;
+      padding: 24px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; text-decoration: none; color: inherit;
+      transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+      overflow: hidden;
+    }
+    .method-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      opacity: 0; transition: opacity 0.22s;
+    }
+    .method-card:hover { border-color: var(--border-h); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.45); }
+    .method-card:hover::before { opacity: 1; }
+
+    .card-blue::before   { background: linear-gradient(135deg,rgba(96,165,250,0.07),rgba(34,211,238,0.04)); }
+    .card-purple::before { background: linear-gradient(135deg,rgba(167,139,250,0.08),rgba(79,70,229,0.04)); }
+    .card-green::before  { background: linear-gradient(135deg,rgba(52,211,153,0.08),rgba(8,145,178,0.04)); }
+
+    .method-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-blue   .method-icon { background: rgba(96,165,250,0.12); color: var(--blue); }
+    .card-purple .method-icon { background: rgba(167,139,250,0.12); color: var(--purple); }
+    .card-green  .method-icon { background: rgba(52,211,153,0.12); color: var(--green); }
+
+    .method-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .card-blue   .method-tag { color: var(--blue); }
+    .card-purple .method-tag { color: var(--purple); }
+    .card-green  .method-tag { color: var(--green); }
+
+    .method-title { font-size: 1.1rem; font-weight: 800; color: var(--text-1); line-height: 1.3; }
+    .method-desc  { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; flex: 1; }
+
+    .method-features {
+      display: flex; flex-direction: column; gap: 5px;
+      padding: 12px 0 0; border-top: 1px solid var(--border);
+    }
+    .mf {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.76rem; color: var(--text-2);
+    }
+    .mf::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--text-3); flex-shrink: 0; }
+
+    .method-arrow {
+      margin-top: auto; color: var(--text-3);
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; font-weight: 600;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .card-blue   .method-arrow { color: rgba(96,165,250,0.5); }
+    .card-purple .method-arrow { color: rgba(167,139,250,0.5); }
+    .card-green  .method-arrow { color: rgba(52,211,153,0.5); }
+    .method-card:hover .method-arrow { gap: 10px; opacity: 1; filter: brightness(1.4); }
+
+    /* ── Back link ── */
+    .back {
+      position: fixed; top: 22px; left: 26px; z-index: 10;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--text-3); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back:hover { color: var(--text-2); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-2); font-size: 13px; font-weight: 300;
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 56px 0 40px; }
+      .methods { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"></div>
+
+<a href="" class="back">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  課程首頁
+</a>
+
+<div class="wrapper">
+
+  <header>
+    <div class="logo-badge">
+      <svg width="14" height="14" viewBox="0 0 98 96" fill="currentColor" style="opacity:0.6"><path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/></svg>
+      設計與科學 &nbsp;·&nbsp; Tom
+    </div>
+    <h1>GitHub 基礎教學</h1>
+    <p class="subtitle">選擇一種你最適合的方式，把大作業一網站部署到 GitHub Pages 🚀</p>
+  </header>
+
+  <!-- ── 教學方式 ── -->
+  <div class="section-label">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    三種教學方式
+  </div>
+
+  <div class="methods" role="list">
+
+    <!-- 命令列 -->
+    <a href="cli.html" class="method-card card-purple" role="listitem">
+      <div class="method-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </div>
+      <div class="method-tag">⭐ 推薦 · 命令列</div>
+      <div class="method-title">使用 Git 命令列</div>
+      <div class="method-desc">在終端機輸入 Git 指令，是最標準的開發者工作流程，適合想真正學會 Git 的同學。</div>
+      <div class="method-features">
+        <div class="mf">了解 Git 的工作原理</div>
+        <div class="mf">需要安裝 Git</div>
+        <div class="mf">適合所有作業系統</div>
+      </div>
+      <div class="method-arrow">
+        開始教學
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <!-- VS Code -->
+    <a href="vscode.html" class="method-card card-blue" role="listitem">
+      <div class="method-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 9 6 6m0-6-6 6"/></svg>
+      </div>
+      <div class="method-tag">🖱️ 圖形介面 · VS Code</div>
+      <div class="method-title">使用 VS Code<br>Source Control</div>
+      <div class="method-desc">直接在 VS Code 裡點選按鈕完成 Git 操作，不需要記憶指令，適合已在用 VS Code 的同學。</div>
+      <div class="method-features">
+        <div class="mf">全圖形介面，不用打指令</div>
+        <div class="mf">需要安裝 VS Code 與 Git</div>
+        <div class="mf">適合 Mac / Windows</div>
+      </div>
+      <div class="method-arrow">
+        開始教學
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <!-- 網頁版 -->
+    <a href="web.html" class="method-card card-green" role="listitem">
+      <div class="method-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <div class="method-tag">🌐 最簡單 · 網頁上傳</div>
+      <div class="method-title">直接在 GitHub<br>網頁上傳</div>
+      <div class="method-desc">完全不需要安裝任何東西，直接在 GitHub 網站拖拉上傳檔案，適合第一次嘗試的同學。</div>
+      <div class="method-features">
+        <div class="mf">零安裝，最快速入門</div>
+        <div class="mf">無法使用版本控制功能</div>
+        <div class="mf">適合快速交作業</div>
+      </div>
+      <div class="method-arrow">
+        開始教學
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<footer>設計與科學 &nbsp;·&nbsp; Tom</footer>
+
+</body>
+</html>
